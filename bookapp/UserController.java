@@ -15,7 +15,7 @@ public class UserController {
     public UserController(){
 
     } 
-    
+    // Look for CreateUser in Documentation at https://github.com/juampam/BookLending
     public void readFile(){
         String line;
         try(BufferedReader br = new BufferedReader(new FileReader(PATH))) {
@@ -37,18 +37,27 @@ public class UserController {
             e.printStackTrace();
         }
     }
+    // Look for Login in Documentation at https://github.com/juampam/BookLending
     public void login(String username, String password){
-        readFile();
-        String usernames = "";
-        for (String[] row : rows) {
-            if (row.length > 0) {
-                 usernames = row[0];
+        String line;
+        String userlocated = "";
+        try(BufferedReader br = new BufferedReader(new FileReader(PATH))) {
+            while ((line = br.readLine()) != null) {
+                if (line.contains(username) && line.contains(password)) {
+                    userlocated = line;    
+                }
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (usernames.contains(username)) {
-            System.out.println("User exist");
-        }else{
+        if (userlocated == "") {
             System.out.println("User " + username + " do not exist");
+        }else{
+            String[] newEra = userlocated.split(",");
+            if (newEra[0].equals(username) && newEra[1].equals(password)) {
+                System.out.println("Wellcome " + username);
+            }
         }
     }
 }
