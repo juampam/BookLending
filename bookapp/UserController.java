@@ -4,6 +4,9 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,4 +119,52 @@ public class UserController {
             e.printStackTrace();
         }
     }
+    public void lendBook(String user, int targetId){
+        String line = "";
+        String newTable = "database/" + user + "_books.csv";
+        int books = 0;
+        boolean zerovalue  = fileExists(newTable);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("database/books.csv"))) {
+            reader.readLine();
+
+            List<String[]> rows = new ArrayList<>();
+
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                rows.add(values);
+            }
+
+                for (String[] row : rows) {
+                    if (row.length > 0) {
+                        int id = Integer.parseInt(row[0].trim());
+                        books++;
+                        if (id == targetId) {
+                            if (row.length < books || zerovalue == false) {
+                                writeToFile(row[2], newTable,true);
+                            break;
+                            }else{
+                                System.out.println("Switch to premium to get more amazing books!");
+                            }
+                        }
+                    }
+                }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private boolean fileExists(String fileName) {
+        Path path = Paths.get(fileName);
+        return Files.exists(path) && Files.isRegularFile(path);
+    }
+
+    private void writeToFile(String value, String outputFile, boolean append) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile,append))) {
+            writer.write(value + "\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
+
