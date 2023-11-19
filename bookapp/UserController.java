@@ -79,4 +79,11 @@ public class UserController {
             }
         }
     }
+    public void logOut(){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(".user"))) {
+                    writer.write("");
+                } catch (Exception e) {
+                     e.printStackTrace();
+                }
+    }
 }
