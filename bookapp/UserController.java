@@ -81,9 +81,39 @@ public class UserController {
     }
     public void logOut(){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(".user"))) {
-                    writer.write("");
-                } catch (Exception e) {
-                     e.printStackTrace();
+             writer.write("");
+         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void listBooks() {
+        String line = "";
+        try (BufferedReader reader = new BufferedReader(new FileReader("books.csv"))) {
+            List<String[]> rows = new ArrayList<>();
+
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                rows.add(values);
+            }
+
+            // Find the maximum width for each column
+            int[] columnWidths = new int[rows.get(0).length];
+            for (String[] row : rows) {
+                for (int i = 0; i < row.length; i++) {
+                    columnWidths[i] = Math.max(columnWidths[i], row[i].length());
                 }
+            }
+
+            // Print the values with proper alignment
+            for (String[] row : rows) {
+                for (int i = 0; i < row.length; i++) {
+                    System.out.printf("%-" + (columnWidths[i] + 2) + "s", row[i]);
+                }
+                System.out.println();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
