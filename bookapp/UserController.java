@@ -9,7 +9,7 @@ import java.util.List;
 
 public class UserController {
     User user = new User();
-    private final String PATH = "users.csv";
+    private final String PATH = "database/users.csv";
     List<String[]> rows = new ArrayList<>();
 
     public UserController(){
@@ -80,7 +80,7 @@ public class UserController {
         }
     }
     public void logOut(){
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(".user"))) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter("database/.user"))) {
              writer.write("");
          } catch (Exception e) {
             e.printStackTrace();
@@ -88,7 +88,7 @@ public class UserController {
     }
     public void listBooks() {
         String line = "";
-        try (BufferedReader reader = new BufferedReader(new FileReader("books.csv"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("database/books.csv"))) {
             List<String[]> rows = new ArrayList<>();
 
             while ((line = reader.readLine()) != null) {
