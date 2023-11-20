@@ -3,7 +3,9 @@ package bookapp;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,7 +75,7 @@ public class UserController {
             if (newEra[0].equals(username) && newEra[1].equals(password)) {
                 System.out.println("Wellcome " + username);
                 try(BufferedWriter writer = new BufferedWriter(new FileWriter(".user"))) {
-                    writer.write(username);
+                    writer.write(username +","+ newEra[2]);
                 } catch (Exception e) {
                      e.printStackTrace();
                 }
@@ -83,7 +85,7 @@ public class UserController {
         }
     }
     public void logOut(){
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter("database/.user"))) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(".user"))) {
              writer.write("");
          } catch (Exception e) {
             e.printStackTrace();
@@ -121,10 +123,16 @@ public class UserController {
     }
     public void lendBook(String user, int targetId){
         String line = "";
-        String newTable = "database/" + user + "_books.csv";
-        int books = 0;
+        String[] uservalues = user.split(",");
+        String newTable = "database/" + uservalues[0] + "_books.csv";
         boolean zerovalue  = fileExists(newTable);
-
+        int lines = 0;
+        createEmptyFile(uservalues[0]);
+        try {
+            lines = (int) Files.lines(Path.of(newTable)).count();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try (BufferedReader reader = new BufferedReader(new FileReader("database/books.csv"))) {
             reader.readLine();
 
@@ -138,13 +146,17 @@ public class UserController {
                 for (String[] row : rows) {
                     if (row.length > 0) {
                         int id = Integer.parseInt(row[0].trim());
-                        books++;
                         if (id == targetId) {
-                            if (row.length < books || zerovalue == false) {
-                                writeToFile(row[2], newTable,true);
-                            break;
-                            }else{
+                          //  System.out.println(row.length);
+                          //  System.out.println(zerovalue);
+                            System.out.println(lines);
+                            if( uservalues[1].equals("false") && lines >= 3 && !row[3].equals("Magazine")) {
                                 System.out.println("Switch to premium to get more amazing books!");
+                            }else if(uservalues[1].equals("true") && lines == 5 && !row[3].equals("Magazine")){
+                                System.out.println("Premium users only can lend 5 books");
+                            }else{
+                                writeToFile(row[2], newTable,true);
+                                break;
                             }
                         }
                     }
@@ -154,6 +166,33 @@ public class UserController {
             e.printStackTrace();
         }
     }
+    public void switchPlan(String user){
+        String[] uservalues = user.split(",");
+        String line = "";
+
+        if (uservalues[1].equals("false")) {
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter(".user"))) {
+             writer.write(uservalues[0] + "," + "true");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+             try (BufferedReader br = new BufferedReader(new FileReader("database/users.csv"));
+                FileWriter fw = new FileWriter("tmp")) {
+                while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data[0].equals(uservalues[0])) {
+                    data[2] = "true";
+                }
+                System.out.println(data[2] + uservalues[1]);
+                fw.write(String.join(",", data) + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new File("tmp").renameTo(new File("database/users.csv"));
+        }
+    }
+
     private boolean fileExists(String fileName) {
         Path path = Paths.get(fileName);
         return Files.exists(path) && Files.isRegularFile(path);
@@ -163,6 +202,17 @@ public class UserController {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile,append))) {
             writer.write(value + "\n");
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void createEmptyFile(String user) {
+        String newTable = "database/" + user + "_books.csv";
+        try {
+            File file = new File(newTable);
+
+            file.createNewFile();
+       
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

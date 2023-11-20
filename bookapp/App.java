@@ -15,14 +15,15 @@ public class App {
         return word;
     }
     public static void main(String[] args) {
-         String username = loggeduser();
         UserController users = new UserController();
-        users.login("Juampa","natalia");
-        users.listBooks();
+        users.logOut();
+        users.login("Sofia","juampa");
+        String username = loggeduser();
         users.lendBook(username, 1);
         users.lendBook(username, 18);
         users.lendBook(username, 20);
         users.lendBook(username, 5);
-
+      //  users.listBooks();
+      //  users.switchPlan(username);
     }
 }
