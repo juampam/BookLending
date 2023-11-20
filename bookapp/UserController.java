@@ -122,7 +122,8 @@ public class UserController {
         }
     }
     public void lendBook(String user, int targetId){
-        String line = "";
+        try{
+	String line = "";
         String[] uservalues = user.split(",");
         String newTable = "database/" + uservalues[0] + "_books.csv";
         boolean zerovalue  = fileExists(newTable);
@@ -152,7 +153,7 @@ public class UserController {
                             System.out.println(lines);
                             if( uservalues[1].equals("false") && lines >= 3 && !row[3].equals("Magazine")) {
                                 System.out.println("Switch to premium to get more amazing books!");
-                            }else if(uservalues[1].equals("true") && lines == 5 && !row[3].equals("Magazine")){
+                            }else if(uservalues[1].equals("true") && lines >= 5 && !row[3].equals("Magazine")){
                                 System.out.println("Premium users only can lend 5 books");
                             }else{
                                 booksPerUser(uservalues[0], Integer.toString(lines));
@@ -166,6 +167,11 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+	
+	}catch(Exception e){
+		System.out.println("There are not logged in users");	
+	}
     }
     public void switchPlan(String user){
         String[] uservalues = user.split(",");

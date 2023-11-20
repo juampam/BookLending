@@ -17,9 +17,10 @@ public class App {
     public static void main(String[] args) {
         UserController users = new UserController();
         users.logOut();
-        users.login("Sofia","juampa");
+        users.login("Sofia","password");
         String username = loggeduser();
-        users.lendBook(username, 1);
+        users.switchPlan(username);
+	users.lendBook(username, 1);
         users.lendBook(username, 18);
         users.lendBook(username, 20);
         users.lendBook(username, 5);
