@@ -56,11 +56,6 @@ public class App {
 
             case "-help":
                 if (args.length == 1) {
-                    System.out.println(" __  __        ___           _     _                _ _ ");          
-                    System.out.println("|  \/  |_  _  | _ ) ___  ___| |__ | |   ___ _ _  __| (_)_ _  __ _");
-                    System.out.println("| |\/| | || | | _ \/ _ \/ _ \ / / | |__/ -_) ' \/ _` | | ' \/ _` |");
-                    System.out.println("|_|  |_|\_, | |___/\___/\___/_\_\ |____\___|_||_\__,_|_|_||_\__, |");
-                    System.out.println("         |__/                                                |___/");
                     System.out.println("Comandos disponibles:");
                     System.out.println("  - createuser <username> <password> <premium>");
                     System.out.println("  - login <username> <password>");
