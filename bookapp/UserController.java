@@ -150,13 +150,13 @@ public class UserController {
                         if (id == targetId) {
                           //  System.out.println(row.length);
                           //  System.out.println(zerovalue);
-                            System.out.println(lines);
+                          //  System.out.println(lines);
                             if( uservalues[1].equals("false") && lines >= 3 && !row[3].equals("Magazine")) {
                                 System.out.println("Switch to premium to get more amazing books!");
                             }else if(uservalues[1].equals("true") && lines >= 5 && !row[3].equals("Magazine")){
                                 System.out.println("Premium users only can lend 5 books");
                             }else{
-                                booksPerUser(uservalues[0], Integer.toString(lines));
+                                booksPerUser(uservalues[0], Integer.toString(lines +  + 1));
                                 writeToFile(row[2], newTable,true);
                                 break;
                             }
