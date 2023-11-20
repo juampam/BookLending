@@ -155,6 +155,7 @@ public class UserController {
                             }else if(uservalues[1].equals("true") && lines == 5 && !row[3].equals("Magazine")){
                                 System.out.println("Premium users only can lend 5 books");
                             }else{
+                                booksPerUser(uservalues[0], Integer.toString(lines));
                                 writeToFile(row[2], newTable,true);
                                 break;
                             }
@@ -216,5 +217,22 @@ public class UserController {
             e.printStackTrace();
         }
     }
+    public void booksPerUser(String user, String newlen){
+        String[] uservalues = user.split(",");
+        String line = "";
+        try (BufferedReader br = new BufferedReader(new FileReader("database/users.csv"));
+                FileWriter fw = new FileWriter("tmp")) {
+                while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data[0].equals(uservalues[0])) {
+                    data[3] = newlen;
+                }
+                fw.write(String.join(",", data) + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new File("tmp").renameTo(new File("database/users.csv"));
+        }
 }
 
